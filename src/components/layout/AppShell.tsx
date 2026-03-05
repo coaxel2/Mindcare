@@ -12,7 +12,7 @@ export default function AppShell() {
     <div className="flex flex-col h-dvh bg-bg">
       <DemoBanner />
       {!isChatPage && <Header />}
-      <main className={`flex-1 overflow-y-auto overscroll-contain ${isChatPage ? '' : 'px-4 pb-2'}`}>
+      <main className={`flex-1 overflow-y-auto overflow-x-hidden overscroll-contain ${isChatPage ? '' : 'px-5 pb-2'}`}>
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}

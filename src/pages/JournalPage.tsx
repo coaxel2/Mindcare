@@ -54,7 +54,7 @@ export default function JournalPage() {
   const totalEntries = filteredHistory.length;
 
   return (
-    <div className="flex flex-col gap-5 py-4 pb-6 max-w-lg mx-auto">
+    <div className="flex flex-col gap-5 py-5 pb-10 max-w-lg mx-auto">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="font-bold leading-tight">Mon journal</h1>
         <p className="text-text-secondary text-sm mt-1.5">Ton historique émotionnel</p>
@@ -185,7 +185,7 @@ export default function JournalPage() {
             const config = getMoodConfig(entry.mood);
             const date = entry.createdAt?.toDate?.() ?? new Date(entry.createdAt as unknown as string);
             return (
-              <div key={entry.id} className="px-4 py-4 flex items-start gap-3.5">
+              <div key={entry.id} className="px-5 py-4 flex items-start gap-3.5">
                 <span className="text-xl">{config.emoji}</span>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center justify-between">

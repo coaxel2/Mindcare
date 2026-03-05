@@ -157,7 +157,7 @@ export default function ExercisesPage() {
   };
 
   return (
-    <div className="flex flex-col gap-5 py-4 pb-6 max-w-lg mx-auto">
+    <div className="flex flex-col gap-5 py-5 pb-10 max-w-lg mx-auto">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="font-bold leading-tight">Exercices</h1>
         <p className="text-text-secondary text-sm mt-0.5">Prends un moment pour toi</p>
@@ -176,7 +176,7 @@ export default function ExercisesPage() {
               key={ex.id}
               onClick={() => setActiveBreathing(ex)}
               whileTap={{ scale: 0.98 }}
-              className="w-full px-4 py-4 text-left active:bg-violet-50/50 transition-colors flex items-center gap-3.5"
+              className="w-full px-5 py-4 text-left active:bg-violet-50/50 transition-colors flex items-center gap-3.5"
             >
               <div className="w-10 h-10 rounded-xl bg-violet-50 text-violet-500 flex items-center justify-center flex-shrink-0">
                 {ICONS[ex.icon] || <Heart size={20} />}
@@ -203,7 +203,7 @@ export default function ExercisesPage() {
               <motion.button
                 onClick={() => setActiveWellness(activeWellness === ex.id ? null : ex.id)}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-bg-card rounded-2xl px-4 py-4 shadow-[var(--shadow-card)] border border-border/40 text-left active:shadow-[var(--shadow-card-hover)] transition-shadow flex items-center gap-3.5"
+                className="w-full bg-bg-card rounded-2xl px-5 py-4 shadow-[var(--shadow-card)] border border-border/40 text-left active:shadow-[var(--shadow-card-hover)] transition-shadow flex items-center gap-3.5"
               >
                 <div className="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center flex-shrink-0">
                   {wellnessIcons[ex.category]}

@@ -14,7 +14,7 @@ export default function Navbar() {
   const location = useLocation();
 
   return (
-    <nav className="flex-shrink-0 border-t border-border/60 bg-bg-card/80 backdrop-blur-md px-1 pb-[env(safe-area-inset-bottom)]">
+    <nav className="flex-shrink-0 border-t border-border/60 bg-bg-card/80 backdrop-blur-md px-2 pb-[env(safe-area-inset-bottom)]">
       <div className="flex items-center justify-around">
         {NAV_ITEMS.map(({ to, icon: Icon, label, end }) => {
           const isActive = end

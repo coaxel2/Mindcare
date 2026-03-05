@@ -3,7 +3,7 @@ import { Heart, Shield, AlertTriangle } from 'lucide-react';
 
 export default function AboutPage() {
   return (
-    <div className="flex flex-col gap-5 py-4 pb-6 max-w-lg mx-auto">
+    <div className="flex flex-col gap-5 py-5 pb-10 max-w-lg mx-auto">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="font-bold leading-tight">À propos</h1>
       </motion.div>

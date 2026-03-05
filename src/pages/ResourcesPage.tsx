@@ -22,7 +22,7 @@ const CATEGORY_META: Record<string, { icon: React.ReactNode; color: string; bg: 
 
 export default function ResourcesPage() {
   return (
-    <div className="py-4 pb-8 flex flex-col gap-6 max-w-lg mx-auto">
+    <div className="py-5 pb-10 flex flex-col gap-6 max-w-lg mx-auto">
 
       {/* Header */}
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
@@ -88,7 +88,7 @@ export default function ResourcesPage() {
             {/* Resource cards */}
             <div className="bg-bg-card rounded-2xl shadow-[var(--shadow-card)] border border-border/40 overflow-hidden divide-y divide-border/40">
               {category.resources.map((resource) => (
-                <div key={resource.name} className="px-4 py-4">
+                <div key={resource.name} className="px-5 py-4">
                   <p className="text-sm font-semibold text-text-primary leading-snug">
                     {resource.name}
                   </p>
