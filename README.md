@@ -1,73 +1,132 @@
-# React + TypeScript + Vite
+# MindCare
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Application conversationnelle de bien-être mental pour les 18-24 ans.
 
-Currently, two official plugins are available:
+## Stack technique
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Frontend** : React 19 + TypeScript + Vite + TailwindCSS v4 + Framer Motion
+- **Backend** : Firebase (Auth + Firestore + Cloud Functions)
+- **IA** : OpenAI gpt-4o-mini via Firebase Cloud Function
+- **Icônes** : lucide-react | **Dates** : date-fns (locale fr)
 
-## React Compiler
+## Installation
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Configuration Firebase
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. Crée un projet sur [console.firebase.google.com](https://console.firebase.google.com)
+2. Active **Authentication** (Email/Mot de passe)
+3. Active **Firestore** en mode production
+4. Active **Cloud Functions**
+5. Copie `.env.example` en `.env` et remplis les variables :
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.example .env
 ```
+
+```
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_AUTH_DOMAIN=...
+VITE_FIREBASE_PROJECT_ID=...
+VITE_FIREBASE_STORAGE_BUCKET=...
+VITE_FIREBASE_MESSAGING_SENDER_ID=...
+VITE_FIREBASE_APP_ID=...
+```
+
+## Démarrer en développement
+
+```bash
+npm run dev
+```
+
+L'app tourne sur `http://localhost:5173`
+
+## Build production
+
+```bash
+npm run build
+```
+
+## Cloud Function (IA)
+
+Pour activer le chat IA avec OpenAI :
+
+```bash
+cd functions
+npm install
+```
+
+Ajoute la clé OpenAI comme secret Firebase :
+```bash
+firebase functions:secrets:set OPENAI_API_KEY
+```
+
+Déploie la fonction :
+```bash
+npm run deploy
+```
+
+> Sans la clé OpenAI, le chat répond avec un message de fallback bienveillant.
+
+## Règles Firestore
+
+```
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{uid} {
+      allow read, write: if request.auth != null && request.auth.uid == uid;
+      match /{subcollection=**} {
+        allow read, write: if request.auth != null && request.auth.uid == uid;
+      }
+    }
+  }
+}
+```
+
+## Structure du projet
+
+```
+src/
+├── config/firebase.ts        # Init Firebase
+├── contexts/AuthContext.tsx   # Auth state global
+├── types/                    # Interfaces TypeScript
+├── constants/                # Données statiques
+├── services/                 # Accès Firestore + Cloud Functions
+├── hooks/                    # useAuth, useChat, useMood, useDistressDetection
+├── components/
+│   ├── ui/                   # Button, Input, Card, Modal, Loader, Avatar, Badge
+│   ├── layout/               # AppShell, Navbar, Header, ProtectedRoute
+│   ├── preloader/            # Preloader animé
+│   └── ...
+├── pages/                    # 10 pages complètes
+├── animations/variants.ts    # Presets Framer Motion
+└── utils/                    # cn, formatDate, firebaseErrors
+functions/
+└── src/index.ts              # Cloud Function sendMessage (OpenAI proxy)
+```
+
+## Pages
+
+| Route | Page |
+|-------|------|
+| `/onboarding` | Slides de bienvenue (3 étapes) |
+| `/login` | Connexion |
+| `/signup` | Création de compte |
+| `/app` | Accueil + mood check-in |
+| `/app/chat` | Chat IA conversationnel |
+| `/app/journal` | Journal émotionnel + calendrier |
+| `/app/exercises` | Respiration + exercices bien-être |
+| `/app/resources` | Ressources d'aide |
+| `/app/profile` | Profil utilisateur |
+| `/app/about` | À propos |
+
+## Urgences intégrées
+
+L'app détecte automatiquement les mots-clés de détresse et affiche une alerte avec :
+- **3114** – Numéro national de prévention du suicide (24h/24)
+- **Fil Santé Jeunes** – 0 800 235 236 (9h-23h)
+- **SOS Amitié** – 09 72 39 40 50 (24h/24)

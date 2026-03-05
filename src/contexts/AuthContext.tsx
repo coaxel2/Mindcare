@@ -1,19 +1,16 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
-import { onAuthStateChanged } from 'firebase/auth';
-import type { User } from 'firebase/auth';
-import { auth } from '../config/firebase';
-import {
-  signUp as authSignUp,
-  signIn as authSignIn,
-  signOut as authSignOut,
-  resetPassword as authResetPassword,
-} from '../services/auth.service';
-import { createUserProfile, getUserProfile } from '../services/user.service';
+import { IS_DEMO_MODE, auth } from '../config/firebase';
 import type { UserProfile } from '../types';
 
+export interface AppUser {
+  uid: string;
+  email: string | null;
+  metadata: { creationTime?: string };
+}
+
 interface AuthContextType {
-  user: User | null;
+  user: AppUser | null;
   profile: UserProfile | null;
   loading: boolean;
   signUp: (email: string, password: string, displayName: string) => Promise<void>;
@@ -22,45 +19,141 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<void>;
 }
 
+// ── Demo storage ─────────────────────────────────────────────────────────────
+const DEMO_USER_KEY = 'mindcare_demo_user';
+const DEMO_PROFILE_KEY = 'mindcare_demo_profile';
+
+function loadDemoSession(): { user: AppUser; profile: UserProfile } | null {
+  try {
+    const u = localStorage.getItem(DEMO_USER_KEY);
+    const p = localStorage.getItem(DEMO_PROFILE_KEY);
+    if (u && p) return { user: JSON.parse(u), profile: JSON.parse(p) };
+  } catch { /* ignore */ }
+  return null;
+}
+
+function saveDemoSession(user: AppUser, profile: UserProfile) {
+  localStorage.setItem(DEMO_USER_KEY, JSON.stringify(user));
+  localStorage.setItem(DEMO_PROFILE_KEY, JSON.stringify(profile));
+}
+
+function clearDemoSession() {
+  localStorage.removeItem(DEMO_USER_KEY);
+  localStorage.removeItem(DEMO_PROFILE_KEY);
+}
+
+// ── Context ───────────────────────────────────────────────────────────────────
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AppUser | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setUser(firebaseUser);
-      if (firebaseUser) {
-        const userProfile = await getUserProfile(firebaseUser.uid);
-        setProfile(userProfile);
-      } else {
-        setProfile(null);
+    if (IS_DEMO_MODE) {
+      const session = loadDemoSession();
+      if (session) {
+        setUser(session.user);
+        setProfile(session.profile);
       }
       setLoading(false);
-    });
-    return unsubscribe;
+      return;
+    }
+
+    // Firebase mode
+    (async () => {
+      const { onAuthStateChanged } = await import('firebase/auth');
+      const { getUserProfile } = await import('../services/user.service');
+
+      const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+        if (firebaseUser) {
+          setUser(firebaseUser as unknown as AppUser);
+          const p = await getUserProfile(firebaseUser.uid);
+          setProfile(p);
+        } else {
+          setUser(null);
+          setProfile(null);
+        }
+        setLoading(false);
+      });
+      return unsubscribe;
+    })();
   }, []);
 
   const signUp = async (email: string, password: string, displayName: string) => {
-    const firebaseUser = await authSignUp(email, password, displayName);
-    await createUserProfile(firebaseUser.uid, { email, displayName });
-    const userProfile = await getUserProfile(firebaseUser.uid);
-    setProfile(userProfile);
+    if (IS_DEMO_MODE) {
+      const uid = `demo_${Date.now()}`;
+      const newUser: AppUser = {
+        uid,
+        email,
+        metadata: { creationTime: new Date().toISOString() },
+      };
+      const newProfile: UserProfile = {
+        uid,
+        email,
+        displayName,
+        photoURL: null,
+        onboardingCompleted: true,
+        createdAt: null as never,
+        updatedAt: null as never,
+        preferences: { notifications: false, dailyReminderTime: null },
+      };
+      saveDemoSession(newUser, newProfile);
+      setUser(newUser);
+      setProfile(newProfile);
+      return;
+    }
+
+    const { createUserWithEmailAndPassword, updateProfile } = await import('firebase/auth');
+    const { createUserProfile, getUserProfile } = await import('../services/user.service');
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    await updateProfile(cred.user, { displayName });
+    await createUserProfile(cred.user.uid, { email, displayName });
+    const p = await getUserProfile(cred.user.uid);
+    setUser(cred.user as unknown as AppUser);
+    setProfile(p);
   };
 
   const signIn = async (email: string, password: string) => {
-    await authSignIn(email, password);
+    if (IS_DEMO_MODE) {
+      const session = loadDemoSession();
+      if (session?.user.email === email) {
+        setUser(session.user);
+        setProfile(session.profile);
+        return;
+      }
+      throw Object.assign(new Error('Utilisateur non trouvé'), { code: 'auth/user-not-found' });
+    }
+
+    const { signInWithEmailAndPassword } = await import('firebase/auth');
+    const { getUserProfile } = await import('../services/user.service');
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    const p = await getUserProfile(cred.user.uid);
+    setUser(cred.user as unknown as AppUser);
+    setProfile(p);
   };
 
   const signOut = async () => {
-    await authSignOut();
+    if (IS_DEMO_MODE) {
+      clearDemoSession();
+      setUser(null);
+      setProfile(null);
+      return;
+    }
+    const { signOut: fbSignOut } = await import('firebase/auth');
+    await fbSignOut(auth);
+    setUser(null);
     setProfile(null);
   };
 
   const resetPassword = async (email: string) => {
-    await authResetPassword(email);
+    if (IS_DEMO_MODE) {
+      alert(`[Mode démo] Réinitialisation simulée pour ${email}`);
+      return;
+    }
+    const { sendPasswordResetEmail } = await import('firebase/auth');
+    await sendPasswordResetEmail(auth, email);
   };
 
   return (
@@ -71,9 +164,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error('useAuth must be used within an AuthProvider');
+  return ctx;
 };
