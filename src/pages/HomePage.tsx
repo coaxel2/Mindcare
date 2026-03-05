@@ -44,7 +44,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="flex flex-col gap-5 py-4 pb-6 max-w-lg mx-auto">
+    <div className="flex flex-col gap-5 py-5 pb-10 max-w-lg mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
@@ -126,12 +126,12 @@ export default function HomePage() {
               key={to}
               onClick={() => navigate(to)}
               whileTap={{ scale: 0.97 }}
-              className="bg-bg-card rounded-2xl p-5 shadow-[var(--shadow-card)] text-left active:shadow-[var(--shadow-card-hover)] transition-shadow border border-border/40"
+              className="bg-bg-card rounded-2xl p-5 shadow-[var(--shadow-card)] text-left active:shadow-[var(--shadow-card-hover)] transition-shadow border border-border/40 overflow-hidden"
             >
               <div className={`w-10 h-10 rounded-xl ${color} flex items-center justify-center mb-3`}>
                 <Icon size={20} />
               </div>
-              <span className="text-[13px] font-semibold text-text-primary">{label}</span>
+              <span className="text-[13px] font-semibold text-text-primary leading-tight">{label}</span>
             </motion.button>
           ))}
         </div>
