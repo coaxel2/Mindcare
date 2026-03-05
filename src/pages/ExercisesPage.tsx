@@ -160,7 +160,7 @@ export default function ExercisesPage() {
     <div className="flex flex-col gap-5 py-5 pb-10 max-w-lg mx-auto">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
         <h1 className="font-bold leading-tight">Exercices</h1>
-        <p className="text-text-secondary text-sm mt-0.5">Prends un moment pour toi</p>
+        <p className="text-text-secondary text-sm mt-1.5">Prends un moment pour toi</p>
       </motion.div>
 
       {/* Breathing */}
