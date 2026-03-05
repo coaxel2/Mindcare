@@ -13,10 +13,10 @@ interface ButtonProps {
 }
 
 const variantStyles = {
-  primary: 'bg-violet-500 hover:bg-violet-600 text-white',
-  secondary: 'bg-violet-50 hover:bg-violet-100 text-violet-500',
-  ghost: 'bg-transparent hover:bg-violet-50 text-text-secondary',
-  danger: 'bg-danger hover:bg-red-600 text-white',
+  primary: 'bg-violet-500 active:bg-violet-600 text-white',
+  secondary: 'bg-violet-50 active:bg-violet-100 text-violet-500',
+  ghost: 'bg-transparent active:bg-violet-50 text-text-secondary',
+  danger: 'bg-danger active:bg-red-600 text-white',
 };
 
 const sizeStyles = {
@@ -41,7 +41,7 @@ export default function Button({
       disabled={disabled || loading}
       onClick={onClick}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all disabled:opacity-50',
+        'inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all disabled:opacity-50',
         variantStyles[variant],
         sizeStyles[size],
         className

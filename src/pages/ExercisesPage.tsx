@@ -81,7 +81,7 @@ function BreathingCircle({ exercise, onClose }: { exercise: BreathingExercise; o
     >
       <button
         onClick={onClose}
-        className="absolute top-6 right-6 text-white/70 hover:text-white transition-colors"
+        className="absolute top-6 right-6 text-white/70 active:text-white transition-colors"
       >
         <X size={24} />
       </button>
@@ -121,7 +121,7 @@ function BreathingCircle({ exercise, onClose }: { exercise: BreathingExercise; o
       {!isRunning && phase !== 'done' && (
         <button
           onClick={startExercise}
-          className="mt-8 px-8 py-3 bg-white text-violet-500 font-semibold rounded-full hover:bg-white/90 transition-colors"
+          className="mt-8 px-8 py-3 bg-white text-violet-500 font-semibold rounded-xl active:bg-white/90 transition-colors"
         >
           Commencer
         </button>
@@ -136,7 +136,7 @@ function BreathingCircle({ exercise, onClose }: { exercise: BreathingExercise; o
           <p className="text-white/80 text-sm mb-4">Bravo, tu as terminé !</p>
           <button
             onClick={onClose}
-            className="px-8 py-3 bg-white text-violet-500 font-semibold rounded-full hover:bg-white/90 transition-colors"
+            className="px-8 py-3 bg-white text-violet-500 font-semibold rounded-xl active:bg-white/90 transition-colors"
           >
             Fermer
           </button>
@@ -151,18 +151,16 @@ export default function ExercisesPage() {
   const [activeWellness, setActiveWellness] = useState<string | null>(null);
 
   const wellnessIcons: Record<string, React.ReactNode> = {
-    grounding: <Footprints size={22} />,
-    relaxation: <Brain size={22} />,
-    mindfulness: <Sparkles size={22} />,
+    grounding: <Footprints size={20} />,
+    relaxation: <Brain size={20} />,
+    mindfulness: <Sparkles size={20} />,
   };
 
   return (
-    <div className="py-4 space-y-6 max-w-lg mx-auto">
+    <div className="flex flex-col gap-5 py-4 pb-6 max-w-lg mx-auto">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <h1 className="text-2xl font-bold font-[family-name:var(--font-family-heading)]">
-          Exercices
-        </h1>
-        <p className="text-text-secondary text-sm mt-1">Prends un moment pour toi</p>
+        <h1 className="font-bold leading-tight">Exercices</h1>
+        <p className="text-text-secondary text-sm mt-0.5">Prends un moment pour toi</p>
       </motion.div>
 
       {/* Breathing */}
@@ -171,23 +169,21 @@ export default function ExercisesPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
-        <h2 className="text-lg font-semibold font-[family-name:var(--font-family-heading)] mb-3">
-          Respiration
-        </h2>
-        <div className="space-y-3">
+        <h2 className="font-bold mb-3">Respiration</h2>
+        <div className="bg-bg-card rounded-2xl shadow-[var(--shadow-card)] border border-border/40 overflow-hidden divide-y divide-border/50">
           {BREATHING_EXERCISES.map((ex) => (
             <motion.button
               key={ex.id}
               onClick={() => setActiveBreathing(ex)}
               whileTap={{ scale: 0.98 }}
-              className="w-full bg-bg-card rounded-2xl p-4 shadow-sm text-left hover:shadow-md transition-shadow flex items-center gap-4"
+              className="w-full px-4 py-4 text-left active:bg-violet-50/50 transition-colors flex items-center gap-3.5"
             >
-              <div className="w-12 h-12 rounded-xl bg-violet-50 text-violet-500 flex items-center justify-center flex-shrink-0">
-                {ICONS[ex.icon] || <Heart size={24} />}
+              <div className="w-10 h-10 rounded-xl bg-violet-50 text-violet-500 flex items-center justify-center flex-shrink-0">
+                {ICONS[ex.icon] || <Heart size={20} />}
               </div>
               <div className="flex-1 min-w-0">
-                <h3 className="font-medium text-sm">{ex.title}</h3>
-                <p className="text-text-muted text-xs mt-0.5 truncate">{ex.description}</p>
+                <h3 className="font-semibold text-sm">{ex.title}</h3>
+                <p className="text-text-muted text-xs mt-1 truncate">{ex.description}</p>
               </div>
             </motion.button>
           ))}
@@ -200,24 +196,22 @@ export default function ExercisesPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <h2 className="text-lg font-semibold font-[family-name:var(--font-family-heading)] mb-3">
-          Bien-être
-        </h2>
-        <div className="space-y-3">
+        <h2 className="font-bold mb-3">Bien-être</h2>
+        <div className="flex flex-col gap-3">
           {WELLNESS_EXERCISES.map((ex) => (
             <div key={ex.id}>
               <motion.button
                 onClick={() => setActiveWellness(activeWellness === ex.id ? null : ex.id)}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-bg-card rounded-2xl p-4 shadow-sm text-left hover:shadow-md transition-shadow flex items-center gap-4"
+                className="w-full bg-bg-card rounded-2xl px-4 py-4 shadow-[var(--shadow-card)] border border-border/40 text-left active:shadow-[var(--shadow-card-hover)] transition-shadow flex items-center gap-3.5"
               >
-                <div className="w-12 h-12 rounded-xl bg-green-50 text-green-600 flex items-center justify-center flex-shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-green-50 text-green-600 flex items-center justify-center flex-shrink-0">
                   {wellnessIcons[ex.category]}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium text-sm">{ex.title}</h3>
-                  <p className="text-text-muted text-xs mt-0.5">{ex.description}</p>
-                  <span className="text-violet-500 text-[11px] font-medium mt-1 block">
+                  <h3 className="font-semibold text-sm">{ex.title}</h3>
+                  <p className="text-text-muted text-xs mt-1">{ex.description}</p>
+                  <span className="text-violet-500 text-[11px] font-semibold mt-1 block">
                     {ex.durationMinutes} min
                   </span>
                 </div>
@@ -229,15 +223,15 @@ export default function ExercisesPage() {
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="bg-bg-card rounded-xl mx-2 mt-1 overflow-hidden"
+                    className="bg-bg-card rounded-xl mx-2 mt-1 border border-border/40 overflow-hidden"
                   >
                     <div className="p-4 space-y-2.5">
                       {ex.steps.map((step, i) => (
-                        <div key={i} className="flex items-start gap-3">
-                          <div className="w-6 h-6 rounded-full bg-violet-50 text-violet-500 flex items-center justify-center flex-shrink-0 text-xs font-semibold">
+                        <div key={i} className="flex items-start gap-2.5">
+                          <div className="w-5 h-5 rounded-full bg-violet-50 text-violet-500 flex items-center justify-center flex-shrink-0 text-[10px] font-bold">
                             {i + 1}
                           </div>
-                          <p className="text-sm text-text-secondary leading-relaxed">{step}</p>
+                          <p className="text-xs text-text-secondary leading-relaxed">{step}</p>
                         </div>
                       ))}
                     </div>

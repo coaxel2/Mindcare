@@ -30,12 +30,12 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
           >
             <button
               onClick={onClose}
-              className="absolute right-4 top-4 rounded-full p-1 text-text-muted transition-colors hover:bg-violet-50 hover:text-text-primary"
+              className="absolute right-4 top-4 rounded-full p-1 text-text-muted transition-colors active:bg-violet-50 active:text-text-primary"
             >
               <X className="h-5 w-5" />
             </button>
             {title && (
-              <h2 className="mb-4 pr-8 text-lg font-semibold text-text-primary font-[family-name:var(--font-family-heading)]">
+              <h2 className="mb-4 pr-8 text-lg font-semibold text-text-primary">
                 {title}
               </h2>
             )}
