@@ -30,7 +30,6 @@ export default function App() {
 
   return (
     <AuthProvider>
-      <DemoBanner />
       <BrowserRouter>
         <Routes>
           <Route path="/onboarding" element={<OnboardingPage />} />

@@ -19,12 +19,12 @@ export default function OnboardingPage() {
   const skip = () => navigate('/signup');
 
   return (
-    <div className="min-h-dvh bg-bg flex flex-col items-center justify-between px-6 py-10">
+    <div className="min-h-dvh bg-bg flex flex-col items-center justify-between px-6 py-8">
       <div className="flex justify-end w-full">
         {current < ONBOARDING_SLIDES.length - 1 && (
           <button
             onClick={skip}
-            className="text-text-muted text-sm font-medium hover:text-violet-500 transition-colors"
+            className="text-text-muted text-xs font-semibold active:text-violet-500 transition-colors"
           >
             Passer
           </button>
@@ -34,33 +34,33 @@ export default function OnboardingPage() {
       <AnimatePresence mode="wait">
         <motion.div
           key={current}
-          initial={{ opacity: 0, x: 60 }}
+          initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -60 }}
-          transition={{ duration: 0.35 }}
+          exit={{ opacity: 0, x: -50 }}
+          transition={{ duration: 0.25 }}
           className="flex flex-col items-center text-center flex-1 justify-center max-w-sm"
         >
           <img
             src={slide.image}
             alt={slide.title}
-            className="w-64 h-64 mb-10"
+            className="w-56 h-56 mb-8"
           />
-          <h1 className="text-3xl font-bold text-text-primary mb-4 font-[family-name:var(--font-family-heading)]">
+          <h1 className="font-bold leading-tight text-text-primary mb-2">
             {slide.title}
           </h1>
-          <p className="text-text-secondary text-base leading-relaxed">
+          <p className="text-text-secondary text-sm leading-relaxed">
             {slide.description}
           </p>
         </motion.div>
       </AnimatePresence>
 
-      <div className="w-full max-w-sm flex flex-col items-center gap-6">
-        <div className="flex gap-2">
+      <div className="w-full max-w-sm flex flex-col items-center gap-5">
+        <div className="flex gap-1.5">
           {ONBOARDING_SLIDES.map((_, i) => (
             <div
               key={i}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === current ? 'w-8 bg-violet-500' : 'w-2 bg-violet-200'
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                i === current ? 'w-7 bg-violet-500' : 'w-1.5 bg-violet-200'
               }`}
             />
           ))}
@@ -68,7 +68,7 @@ export default function OnboardingPage() {
 
         <button
           onClick={next}
-          className="w-full py-3.5 bg-violet-500 text-white font-semibold rounded-full text-base hover:bg-violet-600 transition-colors"
+          className="w-full py-3 bg-violet-500 text-white font-bold rounded-xl text-sm active:bg-violet-600 transition-colors"
         >
           {current === ONBOARDING_SLIDES.length - 1 ? 'Commencer' : 'Suivant'}
         </button>
@@ -76,7 +76,7 @@ export default function OnboardingPage() {
         {current === ONBOARDING_SLIDES.length - 1 && (
           <button
             onClick={() => navigate('/login')}
-            className="text-violet-500 text-sm font-medium hover:underline"
+            className="text-violet-500 text-xs font-semibold"
           >
             J'ai déjà un compte
           </button>

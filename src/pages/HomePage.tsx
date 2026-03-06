@@ -44,39 +44,39 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="py-4 space-y-6 max-w-lg mx-auto">
+    <div className="flex flex-col gap-5 py-4 pb-6 max-w-lg mx-auto">
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <h1 className="text-2xl font-bold font-[family-name:var(--font-family-heading)]">
+        <h1 className="font-bold leading-tight">
           {greeting}, {profile?.displayName?.split(' ')[0] || 'toi'} 👋
         </h1>
-        <p className="text-text-secondary mt-1">Comment tu te sens aujourd'hui ?</p>
+        <p className="text-text-secondary mt-1.5 text-sm">Comment tu te sens aujourd'hui ?</p>
       </motion.div>
 
       {/* Mood Check-in */}
       <motion.div
-        className="bg-bg-card rounded-2xl p-5 shadow-sm"
+        className="bg-bg-card rounded-2xl p-5 shadow-[var(--shadow-card)] border border-border/40"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
       >
         {!isLoading && (
           <>
-            <div className="flex justify-between items-center mb-4">
+            <div className="flex justify-between items-center">
               {MOODS.map((mood) => (
                 <motion.button
                   key={mood.type}
                   onClick={() => handleMoodSelect(mood.type)}
                   whileTap={{ scale: 0.9 }}
-                  className={`flex flex-col items-center gap-1.5 p-2 rounded-xl transition-all ${
+                  className={`flex flex-col items-center gap-1 p-2 rounded-xl transition-all ${
                     selectedMood === mood.type
-                      ? 'bg-violet-50 scale-110'
-                      : 'hover:bg-gray-50'
+                      ? 'bg-violet-50 scale-105 ring-2 ring-violet-200'
+                      : 'active:bg-gray-50'
                   }`}
                 >
-                  <span className="text-3xl">{mood.emoji}</span>
+                  <span className="text-2xl">{mood.emoji}</span>
                   <span className="text-[10px] text-text-secondary font-medium">{mood.label}</span>
                 </motion.button>
               ))}
@@ -86,26 +86,26 @@ export default function HomePage() {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="space-y-3"
+                className="space-y-2.5 mt-3 pt-3 border-t border-border/40"
               >
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Ajoute une note si tu veux (optionnel)..."
-                  className="w-full px-4 py-3 rounded-xl border border-border bg-white focus:border-violet-500 focus:ring-2 focus:ring-violet-100 outline-none transition-all resize-none text-sm"
+                  placeholder="Ajoute une note (optionnel)..."
+                  className="w-full px-3.5 py-2.5 rounded-xl border border-border bg-bg focus:border-violet-500 focus:ring-2 focus:ring-violet-100 outline-none transition-all resize-none text-sm"
                   rows={2}
                 />
                 <button
                   onClick={handleSaveMood}
-                  className="w-full py-2.5 bg-violet-500 text-white font-medium rounded-full text-sm hover:bg-violet-600 transition-colors"
+                  className="w-full py-2.5 bg-violet-500 text-white font-semibold rounded-xl text-sm active:bg-violet-600 transition-colors"
                 >
-                  Enregistrer mon humeur
+                  Enregistrer
                 </button>
               </motion.div>
             )}
 
             {hasMoodToday && (
-              <p className="text-text-muted text-sm text-center">
+              <p className="text-text-muted text-xs text-center mt-3 pt-3 border-t border-border/40">
                 ✓ Humeur enregistrée pour aujourd'hui
               </p>
             )}
@@ -119,21 +119,19 @@ export default function HomePage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2 }}
       >
-        <h2 className="text-lg font-semibold font-[family-name:var(--font-family-heading)] mb-3">
-          Que veux-tu faire ?
-        </h2>
+        <h2 className="font-bold mb-3">Que veux-tu faire ?</h2>
         <div className="grid grid-cols-2 gap-3">
           {quickActions.map(({ icon: Icon, label, to, color }) => (
             <motion.button
               key={to}
               onClick={() => navigate(to)}
               whileTap={{ scale: 0.97 }}
-              className="bg-bg-card rounded-2xl p-4 shadow-sm text-left hover:shadow-md transition-shadow"
+              className="bg-bg-card rounded-2xl p-5 shadow-[var(--shadow-card)] text-left active:shadow-[var(--shadow-card-hover)] transition-shadow border border-border/40"
             >
               <div className={`w-10 h-10 rounded-xl ${color} flex items-center justify-center mb-3`}>
                 <Icon size={20} />
               </div>
-              <span className="text-sm font-medium text-text-primary">{label}</span>
+              <span className="text-[13px] font-semibold text-text-primary">{label}</span>
             </motion.button>
           ))}
         </div>
@@ -141,13 +139,13 @@ export default function HomePage() {
 
       {/* Encouragement */}
       <motion.div
-        className="bg-gradient-to-r from-violet-500 to-violet-400 rounded-2xl p-5 text-white"
+        className="bg-gradient-to-br from-violet-600 via-violet-500 to-violet-400 rounded-2xl p-5 text-white"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
       >
-        <p className="text-sm font-medium opacity-90">Pensée du jour</p>
-        <p className="text-base mt-2 font-medium leading-relaxed">
+        <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Pensée du jour</p>
+        <p className="text-[15px] mt-2.5 font-semibold leading-relaxed">
           "Prendre soin de soi n'est pas un luxe, c'est une nécessité."
         </p>
       </motion.div>

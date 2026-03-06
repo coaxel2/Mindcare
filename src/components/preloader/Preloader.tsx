@@ -34,7 +34,7 @@ export default function Preloader({ onComplete }: PreloaderProps) {
             </svg>
           </motion.div>
           <motion.h1
-            className="text-3xl font-bold text-white font-[family-name:var(--font-family-heading)]"
+            className="text-3xl font-bold text-white"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.5 }}

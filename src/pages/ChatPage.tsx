@@ -12,12 +12,12 @@ import type { Message } from '../types';
 function ChatBubble({ message, isUser }: { message: Message; isUser: boolean }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 10 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-3`}
+      className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-2.5`}
     >
       <div
-        className={`max-w-[80%] px-4 py-3 text-sm leading-relaxed ${
+        className={`max-w-[80%] px-3.5 py-2.5 text-[13px] leading-relaxed ${
           isUser
             ? 'bg-chat-user text-white rounded-2xl rounded-br-md'
             : 'bg-chat-ai text-text-primary rounded-2xl rounded-bl-md'
@@ -58,39 +58,39 @@ function DistressAlertModal({ onClose }: { onClose: () => void }) {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="bg-white rounded-2xl p-6 max-w-md w-full shadow-xl"
+        className="bg-white rounded-2xl p-5 max-w-md w-full shadow-xl"
       >
         <div className="text-center mb-4">
-          <div className="w-14 h-14 bg-danger-light rounded-full flex items-center justify-center mx-auto mb-3">
-            <span className="text-2xl">💜</span>
+          <div className="w-12 h-12 bg-danger-light rounded-full flex items-center justify-center mx-auto mb-2">
+            <span className="text-xl">💜</span>
           </div>
-          <h2 className="text-xl font-bold font-[family-name:var(--font-family-heading)]">
+          <h2 className="font-bold">
             {EMERGENCY_RESOURCES.title}
           </h2>
-          <p className="text-text-secondary text-sm mt-2">
+          <p className="text-text-secondary text-xs mt-1">
             {EMERGENCY_RESOURCES.message}
           </p>
         </div>
 
-        <div className="space-y-3 mb-6">
+        <div className="space-y-2 mb-5">
           {EMERGENCY_RESOURCES.contacts.map((contact) => (
             <a
               key={contact.phone}
               href={`tel:${contact.phone.replace(/\s/g, '')}`}
-              className="flex items-center justify-between p-3 bg-violet-50 rounded-xl hover:bg-violet-100 transition-colors"
+              className="flex items-center justify-between p-3 bg-violet-50 rounded-xl active:bg-violet-100 transition-colors"
             >
               <div>
                 <p className="font-medium text-sm text-text-primary">{contact.name}</p>
-                <p className="text-text-muted text-xs">{contact.available}</p>
+                <p className="text-text-muted text-[11px]">{contact.available}</p>
               </div>
-              <span className="text-violet-500 font-bold text-lg">{contact.phone}</span>
+              <span className="text-violet-500 font-bold text-sm">{contact.phone}</span>
             </a>
           ))}
         </div>
 
         <button
           onClick={onClose}
-          className="w-full py-3 bg-violet-500 text-white font-medium rounded-full hover:bg-violet-600 transition-colors text-sm"
+          className="w-full py-2.5 bg-violet-500 text-white font-bold rounded-xl active:bg-violet-600 transition-colors text-sm"
         >
           Continuer la discussion
         </button>
@@ -145,19 +145,19 @@ export default function ChatPage() {
   return (
     <div className="flex flex-col h-full bg-bg">
       {/* Chat Header */}
-      <div className="flex-shrink-0 flex items-center justify-between px-4 py-3 bg-bg-card border-b border-border">
-        <div className="flex items-center gap-3">
+      <div className="flex-shrink-0 flex items-center justify-between px-4 py-2.5 bg-bg-card/80 backdrop-blur-md border-b border-border/60">
+        <div className="flex items-center gap-2.5">
           <button
             onClick={() => setShowConversations(!showConversations)}
-            className="text-text-secondary hover:text-violet-500 transition-colors"
+            className="text-text-secondary active:text-violet-500 transition-colors"
           >
-            <ArrowLeft size={20} />
+            <ArrowLeft size={18} />
           </button>
           <div>
-            <h2 className="font-semibold text-sm font-[family-name:var(--font-family-heading)]">
+            <h2 className="font-semibold text-sm">
               MindCare
             </h2>
-            <p className="text-[11px] text-green-500 font-medium">En ligne</p>
+            <p className="text-[10px] text-green-500 font-medium">En ligne</p>
           </div>
         </div>
         <button
@@ -165,9 +165,9 @@ export default function ChatPage() {
             startNewConversation();
             navigate('/app/chat');
           }}
-          className="text-text-muted hover:text-violet-500 transition-colors"
+          className="text-text-muted active:text-violet-500 transition-colors"
         >
-          <Plus size={20} />
+          <Plus size={18} />
         </button>
       </div>
 
@@ -181,10 +181,10 @@ export default function ChatPage() {
             className="absolute top-0 left-0 bottom-0 w-72 bg-bg-card border-r border-border z-40 overflow-y-auto"
           >
             <div className="p-4">
-              <h3 className="font-semibold mb-3 font-[family-name:var(--font-family-heading)]">
+              <h3 className="font-semibold text-sm mb-3">
                 Conversations
               </h3>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {conversations.map((conv) => (
                   <button
                     key={conv.id}
@@ -192,10 +192,10 @@ export default function ChatPage() {
                       navigate(`/app/chat/${conv.id}`);
                       setShowConversations(false);
                     }}
-                    className={`w-full text-left p-3 rounded-xl text-sm transition-colors ${
+                    className={`w-full text-left p-2.5 rounded-xl text-sm transition-colors ${
                       conv.id === activeConversationId
                         ? 'bg-violet-50 text-violet-600'
-                        : 'hover:bg-gray-50 text-text-secondary'
+                        : 'active:bg-gray-50 text-text-secondary'
                     }`}
                   >
                     <p className="font-medium truncate">{conv.title}</p>
@@ -217,13 +217,13 @@ export default function ChatPage() {
       <div className="flex-1 overflow-y-auto px-4 py-4">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-16 h-16 rounded-2xl bg-violet-100 flex items-center justify-center mb-4">
-              <span className="text-3xl">💬</span>
+            <div className="w-14 h-14 rounded-2xl bg-violet-100 flex items-center justify-center mb-3">
+              <span className="text-2xl">💬</span>
             </div>
-            <h3 className="font-semibold text-lg mb-2 font-[family-name:var(--font-family-heading)]">
+            <h3 className="font-semibold text-base mb-1">
               Commence une conversation
             </h3>
-            <p className="text-text-secondary text-sm max-w-xs">
+            <p className="text-text-secondary text-xs max-w-xs">
               Dis-moi comment tu te sens ou pose-moi une question. Je suis là pour t'écouter.
             </p>
           </div>
@@ -242,7 +242,7 @@ export default function ChatPage() {
       </div>
 
       {/* Input */}
-      <div className="flex-shrink-0 px-4 py-3 bg-bg-card border-t border-border">
+      <div className="flex-shrink-0 px-4 py-2.5 bg-bg-card/80 backdrop-blur-md border-t border-border/60">
         <div className="flex items-end gap-2">
           <textarea
             value={input}
@@ -250,15 +250,15 @@ export default function ChatPage() {
             onKeyDown={handleKeyDown}
             placeholder="Écris ton message..."
             rows={1}
-            className="flex-1 px-4 py-3 rounded-2xl border border-border bg-bg focus:border-violet-500 focus:ring-2 focus:ring-violet-100 outline-none transition-all resize-none text-sm max-h-28"
+            className="flex-1 px-3.5 py-2.5 rounded-2xl border border-border bg-bg focus:border-violet-500 focus:ring-2 focus:ring-violet-100 outline-none transition-all resize-none text-[13px] max-h-28"
           />
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={handleSend}
             disabled={!input.trim() || isSending}
-            className="w-11 h-11 flex items-center justify-center bg-violet-500 text-white rounded-full hover:bg-violet-600 transition-colors disabled:opacity-40 flex-shrink-0"
+            className="w-10 h-10 flex items-center justify-center bg-violet-500 text-white rounded-full active:bg-violet-600 transition-colors disabled:opacity-40 flex-shrink-0"
           >
-            <Send size={18} />
+            <Send size={16} />
           </motion.button>
         </div>
       </div>
